@@ -27,6 +27,10 @@ Any combination of the following:
 ```{"fsk": "<movieFSK>"}``` **[type: number]** returns results have the given FSK rating or less.
 
 
+### GET /api/de/genres
+
+returns all genres in the DB.
+
 ## Requirements
 
 A "database.ini" file inside ```/src``` with the following schema:

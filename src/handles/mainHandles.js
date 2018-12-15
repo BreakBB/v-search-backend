@@ -4,7 +4,7 @@ const db = require("../database");
 module.exports = {
   getAllMoviesDE: async function (req, res) {
     console.log("Searching for movies...");
-    const { rows } = await db.query('SELECT * FROM amazon_video_de', null);
+    const {rows} = await db.query('SELECT * FROM amazon_video_de', null);
 
     if (rows != null) {
       console.log("Found", rows.length, "entries.");
@@ -13,7 +13,7 @@ module.exports = {
     }
     else {
       const message = "Found no entries in the DB.";
-      console.log(message);
+      console.error(message);
       res.status(400);
       res.send(message)
     }
@@ -23,19 +23,19 @@ module.exports = {
 
     const query = {
       text: 'SELECT * FROM amazon_video_de' +
-            ' WHERE ($1 OR title = $2)' +
-            ' AND ($3 OR rating >= $4)' +
-            ' AND ($5 OR imdb >= $6)' +
-            ' AND ($7 OR $8 = ANY(genres))' +
-            ' AND ($9 OR year = $10)' +
-            ' AND ($11 OR fsk <= $12)',
+      ' WHERE ($1 OR title = $2)' +
+      ' AND ($3 OR rating >= $4)' +
+      ' AND ($5 OR imdb >= $6)' +
+      ' AND ($7 OR genres IN ($8))' +
+      ' AND ($9 OR year = $10)' +
+      ' AND ($11 OR fsk <= $12)',
       values: filter
     };
 
     console.log("QUERY: ", query.values.reduce((q, v, i) => q.replace(`$${i + 1}`, v), query.text));
 
     console.log("Searching for movies...");
-    const { rows } = await db.query(query);
+    const {rows} = await db.query(query);
 
     if (rows != null) {
       console.log("Found", rows.length, "entries.");
@@ -44,59 +44,94 @@ module.exports = {
     }
     else {
       const message = "Found no entries matching the filter.";
-      console.log(message);
+      console.error(message);
+      res.status(400);
+      res.send(message)
+    }
+  },
+  getAllGenres: async function (req, res) {
+    console.log("Searching for genres...");
+    const {rows} = await db.query('SELECT DISTINCT unnest(genres) FROM amazon_video_de', null);
+
+    if (rows != null) {
+      console.log("Found", rows.length, "genres.");
+
+      let genres = [];
+
+      for (let row of rows) {
+        genres.push(row.unnest)
+      }
+
+      res.status(200);
+      res.json(genres);
+    }
+    else {
+      const message = "Found no genres in the DB. Is the DB empty?";
+      console.error(message);
       res.status(400);
       res.send(message)
     }
   }
 };
 
-function buildFilter(b){
+function buildFilter(b) {
+  console.log("Got body: ", b);
   let filter = [];
 
   const TRUE = "TRUE";
   const FALSE = "FALSE";
   const NULL = "NULL";
 
-  if(b.title == null){
+  if (b.title == null) {
     filter.push(TRUE, NULL);
   }
-  else{
+  else {
     filter.push(FALSE, b.title);
   }
 
-  if(b.rating == null){
+  if (b.rating == null) {
     filter.push(TRUE, 0);
   }
-  else{
+  else {
     filter.push(FALSE, b.rating);
   }
 
-  if(b.imdb == null){
+  if (b.imdb == null) {
     filter.push(TRUE, 0);
   }
-  else{
+  else {
     filter.push(FALSE, b.imdb);
   }
 
-  if(b.genres == null){
-    filter.push(TRUE, NULL);
+  if (b.genres == null) {
+    filter.push(TRUE, "{}");
   }
-  else{
-    filter.push(FALSE, b.genres);
+  else {
+    let genreString = "{";
+    let first = true;
+
+    for (const genre of b.genres) {
+      if (!first) {
+        genreString += ", ";
+      }
+      genreString += genre;
+      first = false;
+    }
+
+    filter.push(FALSE, genreString + "}");
   }
 
-  if(b.year == null){
+  if (b.year == null) {
     filter.push(TRUE, 0);
   }
-  else{
+  else {
     filter.push(FALSE, b.year);
   }
 
-  if(b.fsk == null){
+  if (b.fsk == null) {
     filter.push(TRUE, 0);
   }
-  else{
+  else {
     filter.push(FALSE, b.fsk);
   }
   return filter;

@@ -7,6 +7,7 @@ const handles = require('./handles/mainHandles');
 // DE routes
 router.get('/de/movies', handles.getAllMoviesDE);
 router.post('/de/movies', handles.getFilteredMoviesDE);
+router.get('/de/genres', handles.getAllGenres);
 
 // EN routes
 // router.get('/en/movies', handles.getAllMoviesDE);

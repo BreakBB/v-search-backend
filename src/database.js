@@ -1,9 +1,9 @@
 const {parseIniFile} = require("./iniParser");
-const { Pool } = require('pg');
+const {Pool} = require('pg');
 
 const dbData = parseIniFile('database.ini');
 
-if(dbData === undefined || dbData.postgresql === undefined){
+if (dbData === undefined || dbData.postgresql === undefined) {
   const err = "Error while reading database.ini. Make sure it is formatted correctly.";
   console.error(err);
   throw err;
