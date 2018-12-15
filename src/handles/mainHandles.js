@@ -23,7 +23,7 @@ module.exports = {
 
     const query = {
       text: 'SELECT * FROM amazon_video_de' +
-      ' WHERE ($1 OR title = $2)' +
+      ' WHERE ($1 OR title LIKE $2)' +
       ' AND ($3 OR rating >= $4)' +
       ' AND ($5 OR imdb >= $6)' +
       ' AND ($7 OR genres IN ($8))' +
@@ -86,7 +86,13 @@ function buildFilter(b) {
     filter.push(TRUE, NULL);
   }
   else {
-    filter.push(FALSE, b.title);
+    const stopWords = b.title.split(' ');
+    let titleString = "";
+    for(const word of stopWords){
+      titleString = titleString + "%" + word + "%";
+    }
+
+    filter.push(FALSE, titleString);
   }
 
   if (b.rating == null) {
