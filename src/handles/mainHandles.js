@@ -26,7 +26,7 @@ module.exports = {
       ' WHERE ($1 OR title LIKE $2)' +
       ' AND ($3 OR rating >= $4)' +
       ' AND ($5 OR imdb >= $6)' +
-      ' AND ($7 OR genres IN ($8))' +
+      ' AND ($7 OR genres @> $8::varchar[])' +
       ' AND ($9 OR year = $10)' +
       ' AND ($11 OR fsk <= $12)',
       values: filter
@@ -110,21 +110,10 @@ function buildFilter(b) {
   }
 
   if (b.genres == null) {
-    filter.push(TRUE, "{}");
+    filter.push(TRUE, "");
   }
   else {
-    let genreString = "{";
-    let first = true;
-
-    for (const genre of b.genres) {
-      if (!first) {
-        genreString += ", ";
-      }
-      genreString += genre;
-      first = false;
-    }
-
-    filter.push(FALSE, genreString + "}");
+    filter.push(FALSE, b.genres);
   }
 
   if (b.year == null) {
