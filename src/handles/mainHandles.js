@@ -110,7 +110,7 @@ function buildFilter(b) {
   }
 
   if (b.genres == null) {
-    filter.push(TRUE, "");
+    filter.push(TRUE, "{}");
   }
   else {
     filter.push(FALSE, b.genres);
