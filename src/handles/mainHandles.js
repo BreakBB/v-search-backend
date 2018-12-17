@@ -28,7 +28,8 @@ module.exports = {
       ' AND ($5 OR imdb >= $6)' +
       ' AND ($7 OR genres @> $8::varchar[])' +
       ' AND ($9 OR year = $10)' +
-      ' AND ($11 OR fsk <= $12)',
+      ' AND ($11 OR fsk <= $12)' +
+      ' AND ($13 OR movie_type = $14 OR movie_type = \'\')',
       values: filter
     };
 
@@ -128,6 +129,16 @@ function buildFilter(b) {
   }
   else {
     filter.push(FALSE, b.fsk);
+  }
+
+  if (b.movies && b.series){
+    filter.push(TRUE, NULL); // Use true to find all types
+  }
+  else if (b.movies){
+    filter.push(FALSE, "Film");
+  }
+  else{
+    filter.push(FALSE, "Serie");
   }
   return filter;
 }
