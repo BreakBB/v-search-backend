@@ -23,7 +23,7 @@ module.exports = {
 
     const query = {
       text: 'SELECT * FROM amazon_video_de' +
-      ' WHERE ($1 OR title LIKE $2)' +
+      ' WHERE ($1 OR LOWER(title) LIKE LOWER($2))' +
       ' AND ($3 OR rating >= $4)' +
       ' AND ($5 OR imdb >= $6)' +
       ' AND ($7 OR genres @> $8::varchar[])' +
