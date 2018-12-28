@@ -4,6 +4,9 @@ const router = express.Router();
 
 // backend routes
 const handles = require('./handles/mainHandles');
+// General routes
+router.post('/login', handles.handleLogin);
+
 // DE routes
 router.get('/de/movies', handles.getAllMoviesDE);
 router.post('/de/movies', handles.getFilteredMoviesDE);
