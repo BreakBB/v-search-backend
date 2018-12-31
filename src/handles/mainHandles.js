@@ -42,17 +42,18 @@ module.exports = {
       res.send(message)
     }
   },
-  getNumbersByGenre: async function (req, res) {
-    const genre = req.params.genre;
+  getNumbersByGenreAndType: async function (req, res) {
+    const {genre, type} = req.params;
 
-    if(genre != null){
+    let movie_type = type === "movies" ? "Film" : "Serie";
+
+    if(genre != null && type != null){
       const query = {
-        text: 'SELECT number FROM amazon_video_de WHERE genres @> $1::varchar[]',
-        values: ['{' + genre + '}']
+        text: 'SELECT number FROM amazon_video_de WHERE (genres @> $1::varchar[]) AND (movie_type = $2)',
+        values: ['{' + genre + '}', movie_type]
       };
 
       const {rows} = await db.query(query);
-
       if(rows != null){
         let numbers = [];
 
