@@ -16,8 +16,7 @@ module.exports = {
 };
 
 const handleVote = async (req, res, vote) => {
-  const movieId = req.params.id;
-  const userId = req.body.userId;
+  const {userId, movieId} = req.body;
 
   if (movieId != null && userId != null) {
     const query = {
@@ -41,7 +40,7 @@ const handleVote = async (req, res, vote) => {
     }
   }
   else {
-    const message = "Malformed request. It has to include a valid userId and the route must be a valid movie_id.";
+    const message = "Malformed request. It has to include a valid userId and movieId.";
     console.log(message);
     res.status(400);
     res.send(message);

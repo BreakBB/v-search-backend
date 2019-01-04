@@ -17,8 +17,8 @@ router.post('/de/movies', movieHandles.getFilteredMovies);
 router.get('/de/movies/estimate', movieHandles.getGlobalEstimate);
 router.get('/de/movies/:number', movieHandles.getMovieByNumber);
 
-router.post('/de/movies/:id/vote-up', voteHandles.handleUpVote);
-router.post('/de/movies/:id/vote-down', voteHandles.handleDownVote);
+router.post('/de/movies/vote-up', voteHandles.handleUpVote);
+router.post('/de/movies/vote-down', voteHandles.handleDownVote);
 
 router.get('/de/genres', genreHandles.getAllGenres);
 router.get('/de/genres/:genre/numbers/:type', genreHandles.getNumbersByGenreAndType);

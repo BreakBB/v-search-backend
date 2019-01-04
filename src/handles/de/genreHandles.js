@@ -5,13 +5,17 @@ const db = require("../../database");
 module.exports = {
   getNumbersByGenreAndType: async function (req, res) {
     const {genre, type} = req.params;
+    const userId = req.header("User-Id");
 
     let movie_type = type === "movies" ? "Film" : "Serie";
 
-    if(genre != null && type != null){
+    if(genre != null && type != null && userId != null){
       const query = {
-        text: 'SELECT number FROM amazon_video_de WHERE (genres @> $1::varchar[]) AND (movie_type = $2)',
-        values: ['{' + genre + '}', movie_type]
+        text: 'SELECT number FROM amazon_video_de a WHERE ' +
+        '(genres @> $1::varchar[]) AND ' +
+        '(movie_type = $2) AND ' +
+        '(NOT EXISTS (SELECT FROM votes WHERE movie_id = a.movie_id AND user_id = $3))',
+        values: ['{' + genre + '}', movie_type, userId]
       };
 
       const {rows} = await db.query(query);
