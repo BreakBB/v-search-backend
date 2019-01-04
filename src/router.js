@@ -2,18 +2,23 @@
 const express = require('express');
 const router = express.Router();
 
-// backend routes
-const handles = require('./handles/mainHandles');
+// get handles
+const movieHandles = require('./handles/de/movieHandles');
+const genreHandles = require('./handles/de/genreHandles');
+const generalHandles = require('./handles/generalHandles');
+
 // General routes
-router.post('/login', handles.handleLogin);
+router.post('/login', generalHandles.handleLogin);
 
 // DE routes
-router.get('/de/movies', handles.getAllMoviesDE);
-router.post('/de/movies', handles.getFilteredMovies);
-router.get('/de/movies/estimate', handles.getGlobalEstimate);
-router.get('/de/movies/:number', handles.getMovieByNumber);
-router.get('/de/genres', handles.getAllGenres);
-router.get('/de/genres/:genre/numbers/:type', handles.getNumbersByGenreAndType);
+router.get('/de/movies', movieHandles.getAllMoviesDE);
+router.post('/de/movies', movieHandles.getFilteredMovies);
+router.get('/de/movies/estimate', movieHandles.getGlobalEstimate);
+router.get('/de/movies/:number', movieHandles.getMovieByNumber);
+
+router.get('/de/genres', genreHandles.getAllGenres);
+router.get('/de/genres/:genre/numbers/:type', genreHandles.getNumbersByGenreAndType);
+
 
 // EN routes
 // router.get('/en/movies', handles.getAllMoviesDE);

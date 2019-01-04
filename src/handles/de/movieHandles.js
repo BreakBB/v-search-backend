@@ -1,7 +1,6 @@
 'use strict';
 
-const db = require("../database");
-const bcrypt = require("bcrypt");
+const db = require("../../database");
 
 module.exports = {
   getAllMoviesDE: async function (req, res) {
@@ -41,33 +40,6 @@ module.exports = {
       res.status(400);
       res.send(message)
     }
-  },
-  getNumbersByGenreAndType: async function (req, res) {
-    const {genre, type} = req.params;
-
-    let movie_type = type === "movies" ? "Film" : "Serie";
-
-    if(genre != null && type != null){
-      const query = {
-        text: 'SELECT number FROM amazon_video_de WHERE (genres @> $1::varchar[]) AND (movie_type = $2)',
-        values: ['{' + genre + '}', movie_type]
-      };
-
-      const {rows} = await db.query(query);
-      if(rows != null){
-        let numbers = [];
-
-        for(const row of rows){
-          numbers.push(row.number);
-        }
-
-        res.status(200);
-        res.json(numbers);
-        return;
-      }
-    }
-    res.status(400);
-    res.send("Couldn't get numbers by the given genre");
   },
   getMovieByNumber: async function (req, res) {
     const movie_number = req.params.number;
@@ -120,57 +92,6 @@ module.exports = {
       res.status(400);
       res.send(message)
     }
-  },
-  getAllGenres: async function (req, res) {
-    console.log("Searching for genres...");
-    const {rows} = await db.query('SELECT DISTINCT unnest(genres) FROM amazon_video_de', null);
-
-    if (rows != null) {
-      console.log("Found", rows.length, "genres.");
-
-      let genres = [];
-
-      for (let row of rows) {
-        genres.push(row.unnest)
-      }
-
-      res.status(200);
-      res.json(genres);
-    }
-    else {
-      const message = "Found no genres in the DB. Is the DB empty?";
-      console.error(message);
-      res.status(400);
-      res.send(message);
-    }
-  },
-  handleLogin: async function (req, res) {
-    const {userName, password} = req.body;
-
-    if (userName === undefined || password === undefined) {
-      const message = "userName or password is undefined.";
-      res.status(400);
-      res.send(message);
-    }
-
-    const query = {
-      text: "SELECT password FROM users WHERE name = $1",
-      values: [userName]
-    };
-
-    const {rows} = await db.query(query);
-
-    // UserName exists
-    if (rows != null && rows.length === 1) {
-      // Compare stored hash with password
-      if (bcrypt.compareSync(password, rows[0].password)) {
-        res.status(200);
-        res.send("Login successful");
-        return;
-      }
-    }
-    res.status(400);
-    res.send("Login failed");
   }
 };
 
