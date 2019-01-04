@@ -14,7 +14,7 @@ module.exports = {
     }
 
     const query = {
-      text: "SELECT password FROM users WHERE name = $1",
+      text: "SELECT user_id, password FROM users WHERE name = $1",
       values: [userName]
     };
 
@@ -25,7 +25,7 @@ module.exports = {
       // Compare stored hash with password
       if (bcrypt.compareSync(password, rows[0].password)) {
         res.status(200);
-        res.send("Login successful");
+        res.json(rows[0].user_id);
         return;
       }
     }
