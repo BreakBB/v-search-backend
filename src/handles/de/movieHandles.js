@@ -29,7 +29,9 @@ module.exports = {
     );
 
     if (rows != null) {
-      const estimate = rows[0].estimate;
+      const estimateString = rows[0].estimate;
+      let estimate = Number(estimateString);
+
       console.log("Estimated", estimate, "entries.");
       res.status(200);
       res.json(estimate);
