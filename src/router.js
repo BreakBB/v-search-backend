@@ -7,6 +7,7 @@ const movieHandles = require('./handles/de/movieHandles');
 const genreHandles = require('./handles/de/genreHandles');
 const voteHandles = require('./handles/de/voteHandles');
 const generalHandles = require('./handles/generalHandles');
+const recommenderHandles = require('./handles/recommenderHandles');
 
 // General routes
 router.post('/login', generalHandles.handleLogin);
@@ -22,6 +23,8 @@ router.post('/de/movies/vote-down', voteHandles.handleDownVote);
 
 router.get('/de/genres', genreHandles.getAllGenres);
 router.get('/de/genres/:genre/numbers/:type', genreHandles.getNumbersByGenreAndType);
+
+router.get('/de/recommender', recommenderHandles.handleGeneralUpdate);
 
 
 // EN routes
