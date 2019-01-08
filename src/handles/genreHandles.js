@@ -1,21 +1,19 @@
 'use strict';
 
-const db = require("../../database");
+const db = require("../database");
 
 module.exports = {
-  getNumbersByGenreAndType: async function (req, res) {
+  getNumbersByGenreAndType: async function (req, res, queryString, votesTable) {
     const {genre, type} = req.params;
     const userId = req.header("User-Id");
 
-    let movie_type = type === "movies" ? "Film" : "Serie";
-
     if(genre != null && type != null && userId != null){
       const query = {
-        text: 'SELECT number FROM amazon_video_de a WHERE ' +
+        text: queryString + ' WHERE ' +
         '(genres @> $1::varchar[]) AND ' +
         '(movie_type = $2) AND ' +
-        '(NOT EXISTS (SELECT FROM votes WHERE movie_id = a.movie_id AND user_id = $3))',
-        values: ['{' + genre + '}', movie_type, userId]
+        '(NOT EXISTS (SELECT FROM ' + votesTable + ' WHERE movie_id = a.movie_id AND user_id = $3))',
+        values: ['{' + genre + '}', type, userId]
       };
 
       const {rows} = await db.query(query);
@@ -34,9 +32,9 @@ module.exports = {
     res.status(400);
     res.send("Couldn't get numbers by the given genre");
   },
-  getAllGenres: async function (req, res) {
+  getAllGenres: async function (req, res, queryString) {
     console.log("Searching for genres...");
-    const {rows} = await db.query('SELECT DISTINCT unnest(genres) FROM amazon_video_de', null);
+    const {rows} = await db.query(queryString);
 
     if (rows != null) {
       console.log("Found", rows.length, "genres.");
@@ -51,7 +49,7 @@ module.exports = {
       res.json(genres);
     }
     else {
-      const message = "Found no genres in the DB. Is the DB empty?";
+      const message = "Found no genres. Is the table empty?";
       console.error(message);
       res.status(400);
       res.send(message);

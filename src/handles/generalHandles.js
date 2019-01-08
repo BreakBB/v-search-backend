@@ -9,8 +9,10 @@ module.exports = {
 
     if (userName === undefined || password === undefined) {
       const message = "userName or password is undefined.";
+      console.log(message);
       res.status(400);
       res.send(message);
+      return;
     }
 
     const query = {
