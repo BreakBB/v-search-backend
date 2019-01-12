@@ -47,9 +47,10 @@ module.exports = {
     }
   },
   getMovieByNumber: async function (req, res, queryString) {
-    const movie_number = req.params.number;
+    const number = req.params.number;
+    const movie_number = Number.parseInt(number);
 
-    if (movie_number != null) {
+    if (!isNaN(movie_number)) {
       const query = {
         text: queryString + " WHERE number = $1",
         values: [movie_number]
