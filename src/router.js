@@ -27,8 +27,6 @@ router.post('/de/movies/vote-down', (req, res) => voteHandles.handleVote(req, re
 router.get('/de/genres', (req, res) => genreHandles.getAllGenres(req, res, deQueries.SELECT_GENRES));
 router.get('/de/genres/:genre/numbers/:type', (req, res) => genreHandles.getNumbersByGenreAndType(req, res, deQueries.SELECT_NUMBER, deQueries.TABLE_VOTES));
 
-router.get('/de/recommender', (req, res) => recommenderHandles.handleGeneralUpdate(req, res));
-
 
 // COM routes
 router.get('/com/movies', (req, res) => movieHandles.getAllMovies(req, res, comQueries.SELECT_ALL));
@@ -41,5 +39,7 @@ router.post('/com/movies/vote-down', (req, res) => voteHandles.handleVote(req, r
 
 router.get('/com/genres', (req, res) => genreHandles.getAllGenres(req, res, comQueries.SELECT_GENRES));
 router.get('/com/genres/:genre/numbers/:type', (req, res) => genreHandles.getNumbersByGenreAndType(req, res, comQueries.SELECT_NUMBER, comQueries.TABLE_VOTES));
+
+router.get('/com/recom', (req, res) => recommenderHandles.getRecommendations(req, res, comQueries.TABLE_VOTES, comQueries.TABLE_VIDEO));
 
 module.exports = router;

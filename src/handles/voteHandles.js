@@ -8,12 +8,12 @@ module.exports = {
     if (movieId != null && userId != null) {
       const query = {
         text: queryString,
-        values: [movieId, userId, vote]
+        values: [movieId, userId, vote, vote]
       };
 
       const {rows} = await db.query(query);
 
-      if (rows != null) {
+      if (rows != null && rows.length > 0) {
         const message = "Successfully inserted " + (vote ? "upVote" : "downVote");
         console.log(message);
         res.status(200);
