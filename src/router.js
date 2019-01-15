@@ -19,7 +19,7 @@ router.post('/login', (req, res) => generalHandles.handleLogin(req, res));
 router.get('/de/movies', (req, res) => movieHandles.getAllMovies(req, res, deQueries.SELECT_ALL));
 router.post('/de/movies', (req, res) => movieHandles.getFilteredMovies(req, res, deQueries.SELECT_ALL));
 router.get('/de/movies/estimate', (req, res) => movieHandles.getGlobalEstimate(req, res, deQueries.TABLE_VIDEO));
-router.get('/de/movies/:number', (req, res) => movieHandles.getMovieByNumber(req, res, deQueries.SELECT_ALL));
+router.get('/de/movies/:number', (req, res) => movieHandles.getMovieByNumberOrId(req, res, deQueries.SELECT_ALL));
 
 router.post('/de/movies/vote-up', (req, res) => voteHandles.handleVote(req, res, deQueries.INSERT_VOTE, true));
 router.post('/de/movies/vote-down', (req, res) => voteHandles.handleVote(req, res, deQueries.INSERT_VOTE, false));
@@ -32,7 +32,7 @@ router.get('/de/genres/:genre/numbers/:type', (req, res) => genreHandles.getNumb
 router.get('/com/movies', (req, res) => movieHandles.getAllMovies(req, res, comQueries.SELECT_ALL));
 router.post('/com/movies', (req, res) => movieHandles.getFilteredMovies(req, res, comQueries.SELECT_ALL));
 router.get('/com/movies/estimate', (req, res) => movieHandles.getGlobalEstimate(req, res, comQueries.TABLE_VIDEO));
-router.get('/com/movies/:number', (req, res) => movieHandles.getMovieByNumber(req, res, comQueries.SELECT_ALL));
+router.get('/com/movies/:number', (req, res) => movieHandles.getMovieByNumberOrId(req, res, comQueries.SELECT_ALL));
 
 router.post('/com/movies/vote-up', (req, res) => voteHandles.handleVote(req, res, comQueries.INSERT_VOTE, true));
 router.post('/com/movies/vote-down', (req, res) => voteHandles.handleVote(req, res, comQueries.INSERT_VOTE, false));

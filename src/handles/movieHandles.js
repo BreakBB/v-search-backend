@@ -46,14 +46,30 @@ module.exports = {
       res.send(message)
     }
   },
-  getMovieByNumber: async function (req, res, queryString) {
+  getMovieByNumberOrId: async function (req, res, queryString) {
     const number = req.params.number;
     const movie_number = Number.parseInt(number);
 
+    // A number was given
     if (!isNaN(movie_number)) {
       const query = {
         text: queryString + " WHERE number = $1",
         values: [movie_number]
+      };
+
+      const {rows} = await db.query(query);
+
+      if (rows != null) {
+        res.status(200);
+        res.json(rows[0]);
+        return;
+      }
+    }
+    // A movie_id was given
+    else if (number.startsWith("B0")) {
+      const query = {
+        text: queryString + " WHERE movie_id = $1",
+        values: [number]
       };
 
       const {rows} = await db.query(query);

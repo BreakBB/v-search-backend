@@ -31,5 +31,6 @@ module.exports = {
   "        INNER JOIN amazon_video_com ac_tmp ON directors.name = ANY (ac_tmp.directors)\n" +
   "      WHERE a.movie_id = ac_tmp.movie_id\n" +
   "  ) as director_ids\n",
-  WHERE_CARDINALITY: " cardinality(a.actors) > 2 AND cardinality(a.writer) > 2 AND 'N/A' != ANY (a.directors)"
+  WHERE_CARDINALITY: " cardinality(a.genres) > 0 AND cardinality(a.actors) > 2 AND cardinality(a.writer) > 1 " +
+  "AND cardinality(a.directors) > 0"
 };
