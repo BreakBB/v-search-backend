@@ -40,6 +40,7 @@ router.post('/com/movies/vote-down', (req, res) => voteHandles.handleVote(req, r
 router.get('/com/genres', (req, res) => genreHandles.getAllGenres(req, res, comQueries.SELECT_GENRES));
 router.get('/com/genres/:genre/numbers/:type', (req, res) => genreHandles.getNumbersByGenreAndType(req, res, comQueries.SELECT_NUMBER, comQueries.TABLE_VOTES));
 
-router.get('/com/recom', (req, res) => recommenderHandles.getRecommendations(req, res, comQueries.TABLE_VOTES, comQueries.TABLE_VIDEO));
+router.get('/com/recom/bayes', (req, res) => recommenderHandles.getRecomBayes(req, res, comQueries.TABLE_VOTES, comQueries.TABLE_VIDEO));
+router.get('/com/recom/nn', (req, res) => recommenderHandles.getRecomNN(req, res, comQueries.TABLE_VOTES, comQueries.TABLE_VIDEO));
 
 module.exports = router;
