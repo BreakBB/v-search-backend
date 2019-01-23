@@ -182,5 +182,5 @@ async function getDataToPredict(userId, voteTable, videoTable) {
 
 function spawnPythonProcess(arg) {
   console.log("Spawning python process");
-  return spawn("py", ["v_commender/main.py", arg], {"cwd": "../../v_commender"});
+  return spawn("python", ["v_commender/main.py", arg], {"cwd": "../../v_commender"});
 }
